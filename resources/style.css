@@ -70,11 +70,14 @@ li {
     
 }
 
-/* Beginning section */
+/* Highlight section */
 
 #reel {
     display: flex;
+    margin: 10px 0px 20px 0px;
 }
+
+/* Hot section */
 
 #hot-icon {
     height: auto;
@@ -96,4 +99,11 @@ li {
     font-size: 1.5rem;
     line-height: 1.5rem;
     font-weight: bolder;
+}
+
+
+/* Login  */
+
+#content h2 #lighter {
+    font-weight: 400;
 }
