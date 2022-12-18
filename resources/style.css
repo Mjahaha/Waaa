@@ -25,6 +25,8 @@ html {
     min-width: 65%;
 }
 
+/* Header section */
+
 nav {
     display: inline-flex;
     justify-content: space-between;
@@ -65,4 +67,15 @@ li {
     bottom: 0px;
     align-self: flex-end;
     
+}
+
+/* Beginning section */
+
+#first {
+    display: flex;
+}
+
+#hot {
+    height: auto;
+    width: 25px;
 }
