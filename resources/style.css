@@ -104,6 +104,23 @@ li {
 
 /* Login  */
 
-#content h2 #lighter {
+.unbold {
     font-weight: 400;
+}
+
+#loginContent {
+    width: 550px;
+}
+
+#loginContent form, #loginContent label, #loginContent input {
+    display: flex;
+    justify-content: space-between;
+    align-content: space-between;
+    max-width: 240px;
+    flex-wrap: wrap;
+}
+
+#loginContent label, #loginContent input {
+    line-height: 1.5rem;
+    
 }
