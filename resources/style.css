@@ -21,7 +21,7 @@ html {
 }
 
 #content {
-    max-width: 80%;
+    max-width: 800px;
     min-width: 65%;
 }
 
@@ -48,6 +48,7 @@ input {
     background-color: white;
     border-radius: 20%;
     min-width: 150px;
+    color: black;
 }
 
 #aligner {
@@ -71,11 +72,28 @@ li {
 
 /* Beginning section */
 
-#first {
+#reel {
     display: flex;
 }
 
-#hot {
+#hot-icon {
     height: auto;
     width: 25px;
+}
+
+.post {
+    display: inline-flex;
+    flex-grow: 1;
+    align-items: center;
+    
+}
+
+.rate {
+    border: 3px solid white;
+    margin-left: 40px;
+    padding: 4px;
+    max-height: 2.5rem;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    font-weight: bolder;
 }
