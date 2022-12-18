@@ -1,5 +1,68 @@
+html {
+    font-size: 14px;
+}
+
 * {
     background-color: #00A2E8;
     color: white;
     font-family: 'Work Sans', sans-serif;
+    
+}
+
+#wrapper {
+    width: 100%;
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+.spacer {
+    width: 10%;
+}
+
+#content {
+    max-width: 80%;
+    min-width: 65%;
+}
+
+nav {
+    display: inline-flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+nav h2 {
+    display: inline-flex;
+    font-weight: bold;
+    font-size: 1.7rem;
+    margin: 0px;
+}
+
+header label {
+    font-size: 1.5rem;
+}
+
+input {
+    background-color: white;
+    border-radius: 20%;
+    min-width: 150px;
+}
+
+#aligner {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+ul {
+    margin: 0px;
+}
+
+li {
+    list-style: none;
+    display: inline-flex;
+    position: relative;
+    bottom: 0px;
+    align-self: flex-end;
+    
 }
