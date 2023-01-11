@@ -19,7 +19,7 @@
             <h2><span class="unbold">Complain Everyday</span></h2>
             <br><br>
             <h2><span class="unbold">Sign-in</span></h2>
-            <form>
+            <form action="/login" method="POST">
                 <div>
                     <label for="email">Email</label><br>
                     <label for="password">Password</label>
@@ -28,9 +28,10 @@
                     <input type="email" id="email" name="email"><br>
                     <input type="password" id="password" name="password">
                 </div>
+                <button type="submit">Login</button>
             </form>
             <br><br>
-            <h2><span class="unbold">Don't have an account? <a href="#">Sign-up.</a><br><br>It won't cost you a thing.</span></h2>
+            <h2><span class="unbold">Don't have an account? <a href="/register">Sign-up.</a><br><br>It won't cost you a thing.</span></h2>
         </div>
         <div class="spacer"></div>
     </div>
