@@ -11,8 +11,8 @@ async function createUser(data) {
     await createDocument('users', data);
 }
 
-async function findUser(value) {
-    await findDocument('users', 'name', value);
+async function findUserByEmail(value) {
+    return await findDocument('users', 'email', value);
 }
 
 //findUser('Bill');
@@ -28,6 +28,10 @@ usersRouter.get('/login', (req, res) => {
 }); 
 
 usersRouter.post('/login', (req, res) => {
+    async function login() {
+        let user;
+        user = await findUserByEmail(user.email);
+    }
     if (tempUsers.find(user => req.body.email === user.email) && tempUsers.find(user => req.body.password === user.password)) {
         const userFound = 'yes';
         console.log('yes');
@@ -42,27 +46,34 @@ usersRouter.get('/register', (req, res) => {
 
 usersRouter.post('/register', (req, res, next) => {
     try {
-        console.log('started register');
         const currentDate = new Date;
-        console.log(currentDate);
         const user = {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
             dateCreated: currentDate
         }
+        console.log('The email attempting to be registered is ' + user.email);
         
-        console.log(user);
-        
-        if (!findUser(user.name)) {
-            createUser(user);
-        } else {
-            console.log('The email address ' + user.email + ' is already registered.');
-            return;
-        }
+        async function checkForRegistration() {
+            let alreadyRegistered;
+            alreadyRegistered = await findUserByEmail(user.email);
 
-        res.redirect('/login');
-    } catch {
+            if (!alreadyRegistered) {
+                await createUser(user);
+                res.redirect('/login');
+            } else {
+                //TODO 12/01/2023
+                //show a message that the user is already registered
+                //TODO
+                console.log('The email address ' + user.email + ' is already registered.');
+                res.redirect('/login');
+            }
+        }
+        checkForRegistration();
+        
+    } catch(err) {
+        console.log(err);
         res.redirect('/register');
     }
 });

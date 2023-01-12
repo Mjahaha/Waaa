@@ -2,8 +2,6 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 const { MongoClient } = require('mongodb');
-//import { MongoClient } from 'mongodb';
-//const uri = 'mongodb+srv://AccessMongo:zML2J0GMIej7JGrn@cluster0.ovk6k7u.mongodb.net/?retryWrites=true&w=majority';
 const uri = process.env.DB_URI;
 
 async function connectToCluster(uri) {
@@ -28,6 +26,7 @@ async function createDocument(collection, data) {
 
     await dbCollection.insertOne(data);
     console.log(data);
+    return data;
 }
 
 
