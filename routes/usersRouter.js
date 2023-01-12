@@ -29,15 +29,29 @@ usersRouter.get('/login', (req, res) => {
 
 usersRouter.post('/login', (req, res) => {
     async function login() {
-        let user;
-        user = await findUserByEmail(user.email);
+        try {
+            let userEmail = req.body.email;
+            user = await findUserByEmail(userEmail);
+        } catch {
+            console.log('Could not connect to database.');
+        }
+
+        if (!user) {
+            console.log('Could not find email address in database.');
+            return;
+        }
+        if (user.password !== req.body.password) {
+            console.log('Incorrect password.');
+            return;
+        }
+        //TODO 12/01/2023
+        //Make login session happen
+        //TODO
+        console.log('Credentials validated, login will commence!');
+        res.redirect('/');
+        
     }
-    if (tempUsers.find(user => req.body.email === user.email) && tempUsers.find(user => req.body.password === user.password)) {
-        const userFound = 'yes';
-        console.log('yes');
-    } else {
-        console.log('no');
-    }
+    login();
 });
 
 usersRouter.get('/register', (req, res) => {
