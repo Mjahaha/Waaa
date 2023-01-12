@@ -1,6 +1,10 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 const { MongoClient } = require('mongodb');
 //import { MongoClient } from 'mongodb';
-const uri = 'mongodb+srv://AccessMongo:zML2J0GMIej7JGrn@cluster0.ovk6k7u.mongodb.net/?retryWrites=true&w=majority';
+//const uri = 'mongodb+srv://AccessMongo:zML2J0GMIej7JGrn@cluster0.ovk6k7u.mongodb.net/?retryWrites=true&w=majority';
+const uri = process.env.DB_URI;
 
 async function connectToCluster(uri) {
     let mongoClient;
@@ -20,27 +24,25 @@ async function connectToCluster(uri) {
 async function createDocument(collection, data) {
     const mongoClient = await connectToCluster(uri);
     const db = mongoClient.db('myData'); 
-    console.log(collection);
     const dbCollection = db.collection(collection);
 
     await dbCollection.insertOne(data);
     console.log(data);
 }
 
-//WARNING ONLY SEARCHES BY KEY 'name', I don't know how to make it work otherwise
-async function findDocument(collection, name) {
+
+async function findDocument(collection, key, value) {
     const mongoClient = await connectToCluster(uri);
     const db = mongoClient.db('myData'); 
     const dbCollection = db.collection(collection);
 
-    const result = await dbCollection.find({ name }).toArray();
-    console.log(result);
+    const result = await dbCollection.find({ [key]: value }).toArray();
+    console.log(result[0]);
+    return result[0];
 }
-
-
 
 //connectToCluster(uri);
 //createDocument('myCollection', { name : 'Joseph Campbell', email : 'joeDawg@gmail.com', password : 'ilovebigtitties'});
 //findDocument('myCollection', 'name', 'Bill');
 
-module.exports = createDocument;
+module.exports = { findDocument , createDocument }; 

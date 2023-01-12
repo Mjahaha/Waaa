@@ -1,13 +1,23 @@
 const express = require('express');
 const usersRouter = express.Router();
-const createDocument = require('../mongoCRUD.js')
+usersRouter.use(express.urlencoded( { extended : false } )); 
+
+//Mongo methods
+const createDocument = require('../mongoCRUD.js').createDocument; 
+const findDocument = require('../mongoCRUD.js').findDocument; 
 
 
 async function createUser(data) {
-    await createDocument('myCollection', data);
+    await createDocument('users', data);
 }
 
-createUser({ name : 'Joseph Campbell', email : 'joeDawg@gmail.com', password : 'ilovebigtitties'});
+async function findUser(value) {
+    await findDocument('users', 'name', value);
+}
+
+//findUser('Bill');
+//createUser({ name : 'Bill', email : 'sleepyBill@email', password : 'pinetree', dateCreated: Date.now() });
+
 
 usersRouter.get('/', (req, res) => {
     res.render('index.ejs');
@@ -32,13 +42,25 @@ usersRouter.get('/register', (req, res) => {
 
 usersRouter.post('/register', (req, res, next) => {
     try {
+        console.log('started register');
+        const currentDate = new Date;
+        console.log(currentDate);
         const user = {
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            dateCreated: currentDate
         }
+        
         console.log(user);
-        tempUsers.push(user);
+        
+        if (!findUser(user.name)) {
+            createUser(user);
+        } else {
+            console.log('The email address ' + user.email + ' is already registered.');
+            return;
+        }
+
         res.redirect('/login');
     } catch {
         res.redirect('/register');
