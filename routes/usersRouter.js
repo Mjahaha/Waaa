@@ -38,10 +38,12 @@ usersRouter.post('/login', (req, res) => {
 
         if (!user) {
             console.log('Could not find email address in database.');
+            res.redirect('/login');
             return;
         }
         if (user.password !== req.body.password) {
             console.log('Incorrect password.');
+            res.redirect('/login');
             return;
         }
         //TODO 12/01/2023
@@ -49,7 +51,6 @@ usersRouter.post('/login', (req, res) => {
         //TODO
         console.log('Credentials validated, login will commence!');
         res.redirect('/');
-        
     }
     login();
 });
