@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express(); 
+const passport = require('passport');
 
 const PORT = process.env.PORT || 1001; 
 const tempUsers = [  ];
@@ -10,6 +11,7 @@ app.set('view-engine', 'ejs');
 app.use('/views', express.static('views')); 
 //allows us to use the variables from our form in our server methods (ie POST)
 app.use(express.urlencoded( { extended : false } )); 
+
 
 
 const usersRouter = require('./routes/usersRouter.js');

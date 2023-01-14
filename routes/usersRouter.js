@@ -1,19 +1,26 @@
 const express = require('express');
 const flash = require('express-flash');
 const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const usersRouter = express.Router();
-usersRouter.use(express.urlencoded( { extended : false } )); 
+
 
 //Mongo methods
 const createDocument = require('../mongoCRUD.js').createDocument; 
 const findDocument = require('../mongoCRUD.js').findDocument; 
 
+//Using packages on the router
 usersRouter.use(flash());
 usersRouter.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false
 }));
+usersRouter.use(express.urlencoded( { extended : false } )); 
+usersRouter.use(passport.initialize());
+usersRouter.use(passport.session());
+
 
 
 async function createUser(data) {
@@ -55,17 +62,18 @@ usersRouter.post('/login', (req, res) => {
             res.render('login.ejs', { message: 'Incorrect password.' });
             return;
         }
-        //TODO 12/01/2023
-        //Make login session happen
-        //TODO
         console.log('Credentials validated, login will commence!');
         res.redirect('/');
     }
     login();
 });
 
+function initialisePassport(passport, getUserByKey) {
+
+}
+
 usersRouter.get('/register', (req, res) => {
-    res.render('register.ejs');
+    res.render('register.ejs'); 
 });
 
 usersRouter.post('/register', (req, res, next) => {
@@ -82,17 +90,16 @@ usersRouter.post('/register', (req, res, next) => {
         async function checkForRegistration() {
             let alreadyRegistered;
             alreadyRegistered = await findUserByKey('email', user.email);
-
+            if (alreadyRegistered) {
+                console.log('The email address ' + user.email + ' is already registered.');
+                res.render('login.ejs', { message: 'That email address was already registered, try log on.' });
+                return;
+            }
             if (!alreadyRegistered) {
                 await createUser(user);
                 res.render('login.ejs', { message: 'You have registered successfully, you can now log in.' });
-            } else {
-                //TODO 12/01/2023
-                //show a message that the user is already registered
-                //TODO
-                console.log('The email address ' + user.email + ' is already registered.');
-                res.render('login.ejs', { message: 'That email address was already registered, try log on.' });
-            }
+                return;
+            } 
         }
         checkForRegistration();
         
