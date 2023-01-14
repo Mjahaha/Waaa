@@ -20,9 +20,8 @@
             <br><br>
             <h2><span class="unbold">Sign-in</span></h2>
             <% console.log('EJS is working'); %>
-            <% if (message) { %>
-            <%= message %>
-            
+            <% if (messages.error) { %>
+            <%= messages.error %>
             <% } %>
             <form action="/login" method="POST">
                 <div>
