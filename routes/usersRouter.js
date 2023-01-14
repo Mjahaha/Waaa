@@ -1,10 +1,19 @@
 const express = require('express');
+const flash = require('express-flash');
+const session = require('express-session');
 const usersRouter = express.Router();
 usersRouter.use(express.urlencoded( { extended : false } )); 
 
 //Mongo methods
 const createDocument = require('../mongoCRUD.js').createDocument; 
 const findDocument = require('../mongoCRUD.js').findDocument; 
+
+usersRouter.use(flash());
+usersRouter.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
 
 
 async function createUser(data) {
@@ -24,7 +33,7 @@ usersRouter.get('/', (req, res) => {
 });
 
 usersRouter.get('/login', (req, res) => {
-    res.render('login.ejs');
+    res.render('login.ejs', { message: '' });
 }); 
 
 usersRouter.post('/login', (req, res) => {
@@ -38,12 +47,12 @@ usersRouter.post('/login', (req, res) => {
 
         if (!user) {
             console.log('Could not find email address in database.');
-            res.redirect('/login');
+            res.render('login.ejs', { message: 'Could not find email address in database.' });
             return;
         }
         if (user.password !== req.body.password) {
             console.log('Incorrect password.');
-            res.redirect('/login');
+            res.render('login.ejs', { message: 'Incorrect password.' });
             return;
         }
         //TODO 12/01/2023

@@ -19,6 +19,11 @@
             <h2><span class="unbold">Complain Everyday</span></h2>
             <br><br>
             <h2><span class="unbold">Sign-in</span></h2>
+            <% console.log('EJS is working'); %>
+            <% if (message) { %>
+            <%= message %>
+            
+            <% } %>
             <form action="/login" method="POST">
                 <div>
                     <label for="email">Email</label><br>
