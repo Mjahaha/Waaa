@@ -10,6 +10,11 @@ const usersRouter = express.Router();
 const createDocument = require('../mongoCRUD.js').createDocument; 
 const findDocument = require('../mongoCRUD.js').findDocument; 
 
+initialisePassport(
+    passport, 
+    findUserByKey
+);
+
 //Using packages on the router
 usersRouter.use(flash());
 usersRouter.use(session({
@@ -21,6 +26,7 @@ usersRouter.use(express.urlencoded( { extended : false } ));
 usersRouter.use(passport.initialize());
 usersRouter.use(passport.session());
 
+
 async function createUser(data) {
     await createDocument('users', data);
 }
@@ -31,10 +37,32 @@ async function findUserByKey(key, value) {
 
 //findUser('Bill');
 //createUser({ name : 'Bill', email : 'sleepyBill@email', password : 'pinetree', dateCreated: Date.now() });
-
+async function test() {
+    let user = await findUserByKey('_id', '63bf5a1f649ce52add4cd0db');
+    console.log('by id : ' + user);
+    let user2 = await findUserByKey('email', 'sleepyBill@email');
+    console.log('by email : ' + user2);
+}
+//test();
 
 usersRouter.get('/', (req, res) => {
-    res.render('index.ejs');
+    let userId;
+    if (req.isAuthenticated()) {
+        userId = req.session.passport.user;
+    }
+    
+    async function getUserDetailsIfAuthenticated() {
+        let user = {}; 
+        if (userId) {
+            user = await findUserByKey('_id', userId);
+            res.render('index.ejs', { name: user.name });
+        } else {
+            res.render('index.ejs', { name: null });
+        }
+        
+    }
+    getUserDetailsIfAuthenticated();
+    
 });
 
 usersRouter.get('/login', (req, res) => {
@@ -108,10 +136,7 @@ function initialisePassport(passport, findUserByKey) {
      });
 }
 
-initialisePassport(
-    passport, 
-    findUserByKey
-);
+
 
 usersRouter.post('/login', passport.authenticate('local',{
     successRedirect: '/',

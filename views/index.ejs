@@ -20,10 +20,13 @@
                     <h2>Waaa.com</h2>
                     <div id="aligner">
                     <ul>
-                        
-                        <li><a href="/register">Sign-up</a></li>
-                        <li><a href="/login">Sign-in</a></li>
-                        
+                        <% if (name) {%> 
+                        <%= name  %> 
+                        <% } else { %> 
+                            <% console.log('The name is ' + name) %> 
+                            <li><a href="/register">Sign-up</a></li>
+                            <li><a href="/login">Sign-in</a></li>
+                        <% } %> 
                     </ul> 
                     </div>                   
                     <form>

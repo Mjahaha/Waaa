@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const uri = process.env.DB_URI;
 
 async function connectToCluster(uri) {
@@ -34,14 +34,21 @@ async function findDocument(collection, key, value) {
     const mongoClient = await connectToCluster(uri);
     const db = mongoClient.db('myData'); 
     const dbCollection = db.collection(collection);
-
-    const result = await dbCollection.find({ [key]: value }).toArray();
+    let result;
+  
+    if (key === '_id') {
+        let idObject = new ObjectId(value);
+        result = await dbCollection.find({ [key]: idObject}).toArray();
+    } else {
+        result = await dbCollection.find({ [key]: value }).toArray();
+    }
     console.log(result[0]);
     return result[0];
 }
 
 //connectToCluster(uri);
 //createDocument('myCollection', { name : 'Joseph Campbell', email : 'joeDawg@gmail.com', password : 'ilovebigtitties'});
-//findDocument('myCollection', 'name', 'Bill');
+//findDocument('users', 'name', 'Bill');
+//findDocument('users', '_id', '63bf5e8fc00d9648417f2bde');
 
 module.exports = { findDocument , createDocument }; 
