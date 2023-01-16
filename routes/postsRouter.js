@@ -4,8 +4,24 @@ const flash = require('express-flash');
 const session = require('express-session');
 const passport = require('passport');
 
+//Importing my middleware
+const checkAuthenticated = require('./authenticationMiddleware.js').checkAuthenticated
+const checkNotAuthenticated = require('./authenticationMiddleware.js').checkNotAuthenticated
+
+//Mongo methods and functions
 const createDocument = require('../mongoCRUD.js').createDocument; 
 const findDocument = require('../mongoCRUD.js').findDocument; 
+
+async function createPost(data) {
+    await createDocument('posts', data);
+}
+
+async function findPostByKey(key, value) {
+    return await findDocument('post', key, value);
+}
+
+//createPost({ userId:'jibberish', postText: 'I am so angry about this issue. Why does it suck so much?', dateCreated: '2023-01-12T00:53:43.192Z' });
+
 
 postsRouter.use(flash());
 postsRouter.use(session({
@@ -17,24 +33,19 @@ postsRouter.use(express.urlencoded( { extended : false } ));
 postsRouter.use(passport.initialize());
 postsRouter.use(passport.session());
 
-async function createPost(data) {
-    
-    //await createDocument('posts', data);
-}
-
-async function findUserByKey(key, value) {
-    return await findDocument('post', key, value);
-}
-
-postsRouter.get('/post', (req, res) => {
-    const user = req.session.passport.user;
-    
-
+postsRouter.get('/post', checkAuthenticated, (req, res) => {
     res.render('post.ejs');
 }); 
 
-postsRouter.post('/post', (req, res) => {
-    
+postsRouter.post('/post', checkAuthenticated, (req, res) => {
+    const userId = req.session.passport.user;
+    const currentDate = new Date;
+    const postObject = {
+        postText: req.body.post,
+        userId: userId,
+        dateCreated: currentDate
+    };
+    createPost(postObject);
 });
 
 module.exports = postsRouter;

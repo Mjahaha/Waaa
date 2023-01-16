@@ -4,15 +4,17 @@ const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const usersRouter = express.Router();
+const methodOverride = require('method-override');
 
 //TODO List
-// * Logout function 
-// * Check authentication middleware function
-// * Check for no authentication middleware function
 // * Verify email 
 // * Forgot password 
 // * User details edit 
 // * Delete your account 
+
+//Importing my middleware
+const checkAuthenticated = require('./authenticationMiddleware.js').checkAuthenticated
+const checkNotAuthenticated = require('./authenticationMiddleware.js').checkNotAuthenticated
 
 //Mongo methods and functions
 const createDocument = require('../mongoCRUD.js').createDocument; 
@@ -44,6 +46,7 @@ usersRouter.use(session({
 usersRouter.use(express.urlencoded( { extended : false } )); 
 usersRouter.use(passport.initialize());
 usersRouter.use(passport.session());
+usersRouter.use(methodOverride('_method'));
 
 
 
@@ -67,7 +70,7 @@ usersRouter.get('/', (req, res) => {
     
 }); 
 
-usersRouter.get('/login', (req, res) => {
+usersRouter.get('/login', checkNotAuthenticated, (req, res) => {
     res.render('login.ejs', { message: '' });
 }); 
 
@@ -108,17 +111,17 @@ function initialisePassport(passport, findUserByKey) {
      });
 }
 
-usersRouter.post('/login', passport.authenticate('local',{
+usersRouter.post('/login', checkNotAuthenticated, passport.authenticate('local',{
     successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true
 }));
 
-usersRouter.get('/register', (req, res) => {
+usersRouter.get('/register', checkNotAuthenticated, (req, res) => {
     res.render('register.ejs'); 
 });
 
-usersRouter.post('/register', (req, res, next) => {
+usersRouter.post('/register', checkNotAuthenticated, (req, res, next) => {
     try {
         const currentDate = new Date;
         const user = {
@@ -149,6 +152,13 @@ usersRouter.post('/register', (req, res, next) => {
         console.log(err);
         res.redirect('/register');
     }
+});
+
+usersRouter.delete('/logout', (req, res) => {
+    req.logOut( err => {
+        if (err) { return next(err) }
+        res.redirect('/'); 
+    }); 
 });
 
 module.exports = usersRouter;

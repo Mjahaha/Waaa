@@ -21,7 +21,12 @@
                     <div id="aligner">
                     <ul>
                         <% if (name) {%> 
+                        <div>
                         <%= name  %> 
+                        <form action="/logout?_method=DELETE" method="POST">
+                            <button type="submit">Log Out</button>
+                        </form>
+                        </div>
                         <% } else { %> 
                             <li><a href="/register">Sign-up</a></li>
                             <li><a href="/login">Sign-in</a></li>
@@ -52,7 +57,7 @@
                 <div class="highlight">
                     <p>#Inflation</p>
                     <p>"I feed my children dog food because things are..."</p>
-                    <p><i>- @CheapJew</i></p>
+                    <p><i>- @CheapGuy</i></p>
                 </div>
             </section>
             <a href="/post">Placeholder link for going to the post page</a>
