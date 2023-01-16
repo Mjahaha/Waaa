@@ -18,7 +18,7 @@ const usersRouter = require('./routes/usersRouter.js');
 app.use('/', usersRouter);
 const postsRouter = require('./routes/postsRouter.js'); 
 
-app.use('/', postsRouter);
+app.use('/', postsRouter); 
 
 
 app.listen(PORT, () => {

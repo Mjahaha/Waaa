@@ -45,7 +45,7 @@ postsRouter.post('/post', checkAuthenticated, (req, res) => {
         userId: userId,
         dateCreated: currentDate
     };
-    createPost(postObject);
+    createPost(postObject); 
 });
 
 module.exports = postsRouter;

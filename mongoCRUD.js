@@ -31,7 +31,7 @@ async function createDocument(collection, data) {
 
 
 async function findDocument(collection, key, value) {
-    const mongoClient = await connectToCluster(uri);
+    const mongoClient = await connectToCluster(uri); 
     const db = mongoClient.db('myData'); 
     const dbCollection = db.collection(collection);
     let result;

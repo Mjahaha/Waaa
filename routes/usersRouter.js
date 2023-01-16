@@ -13,8 +13,8 @@ const methodOverride = require('method-override');
 // * Delete your account 
 
 //Importing my middleware
-const checkAuthenticated = require('./authenticationMiddleware.js').checkAuthenticated
-const checkNotAuthenticated = require('./authenticationMiddleware.js').checkNotAuthenticated
+const checkAuthenticated = require('./authenticationMiddleware.js').checkAuthenticated 
+const checkNotAuthenticated = require('./authenticationMiddleware.js').checkNotAuthenticated 
 
 //Mongo methods and functions
 const createDocument = require('../mongoCRUD.js').createDocument; 
