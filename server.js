@@ -13,10 +13,12 @@ app.use('/views', express.static('views'));
 app.use(express.urlencoded( { extended : false } )); 
 
 
-
+//bringing in and using our Router files 
 const usersRouter = require('./routes/usersRouter.js');
 app.use('/', usersRouter);
+const postsRouter = require('./routes/postsRouter.js'); 
 
+app.use('/', postsRouter);
 
 
 app.listen(PORT, () => {

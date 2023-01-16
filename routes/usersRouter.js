@@ -5,10 +5,29 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const usersRouter = express.Router();
 
+//TODO List
+// * Logout function 
+// * Check authentication middleware function
+// * Check for no authentication middleware function
+// * Verify email 
+// * Forgot password 
+// * User details edit 
+// * Delete your account 
 
-//Mongo methods
+//Mongo methods and functions
 const createDocument = require('../mongoCRUD.js').createDocument; 
 const findDocument = require('../mongoCRUD.js').findDocument; 
+
+async function createUser(data) {
+    await createDocument('users', data);
+}
+
+async function findUserByKey(key, value) {
+    return await findDocument('users', key, value);
+}
+
+//findUser('name', 'Bill');
+//createUser({ name: 'Bill', email: 'sleepyBill@email', password: 'pinetree', dateCreated: Date.now() });
 
 initialisePassport(
     passport, 
@@ -27,23 +46,6 @@ usersRouter.use(passport.initialize());
 usersRouter.use(passport.session());
 
 
-async function createUser(data) {
-    await createDocument('users', data);
-}
-
-async function findUserByKey(key, value) {
-    return await findDocument('users', key, value);
-}
-
-//findUser('Bill');
-//createUser({ name : 'Bill', email : 'sleepyBill@email', password : 'pinetree', dateCreated: Date.now() });
-async function test() {
-    let user = await findUserByKey('_id', '63bf5a1f649ce52add4cd0db');
-    console.log('by id : ' + user);
-    let user2 = await findUserByKey('email', 'sleepyBill@email');
-    console.log('by email : ' + user2);
-}
-//test();
 
 usersRouter.get('/', (req, res) => {
     let userId;
@@ -63,41 +65,11 @@ usersRouter.get('/', (req, res) => {
     }
     getUserDetailsIfAuthenticated();
     
-});
+}); 
 
 usersRouter.get('/login', (req, res) => {
     res.render('login.ejs', { message: '' });
 }); 
-
-/*
-usersRouter.post('/login', (req, res) => {
-    async function login() {
-        try {
-            let userEmail = req.body.email;
-            user = await findUserByKey('email', userEmail);
-        } catch {
-            console.log('Could not connect to database.');
-        }
-
-        if (!user) {
-            console.log('Could not find email address in database.');
-            res.render('login.ejs', { message: 'Could not find email address in database.' });
-            return;
-        }
-        if (user.password !== req.body.password) {
-            console.log('Incorrect password.');
-            res.render('login.ejs', { message: 'Incorrect password.' });
-            return;
-        }
-        console.log('Credentials validated, login will commence!');
-        res.redirect('/');
-    }
-    login();
-});
-*/
-
-
-
 
 function initialisePassport(passport, findUserByKey) {
     async function isLoginValid(email, password, done) {
@@ -135,8 +107,6 @@ function initialisePassport(passport, findUserByKey) {
         return done(null, findUserByKey('_id', id));
      });
 }
-
-
 
 usersRouter.post('/login', passport.authenticate('local',{
     successRedirect: '/',
