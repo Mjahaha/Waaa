@@ -4,6 +4,15 @@ const flash = require('express-flash');
 const session = require('express-session');
 const passport = require('passport');
 
+//TODO List
+// * View posts on the main screen 
+// * Get more posts after scrolling 
+// * Upvote posts 
+// * Highlighted posts 
+// * Delete posts 
+// * Comment on posts
+// * View comments 
+
 //Importing my middleware
 const checkAuthenticated = require('./authenticationMiddleware.js').checkAuthenticated
 const checkNotAuthenticated = require('./authenticationMiddleware.js').checkNotAuthenticated
@@ -46,6 +55,7 @@ postsRouter.post('/post', checkAuthenticated, (req, res) => {
         dateCreated: currentDate
     };
     createPost(postObject); 
+    res.render('index.ejs', { name: null });
 });
 
 module.exports = postsRouter;
