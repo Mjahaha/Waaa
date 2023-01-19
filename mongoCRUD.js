@@ -46,9 +46,22 @@ async function findDocument(collection, key, value) {
     return result[0];
 }
 
+async function findLatestSevenPosts() {
+    const mongoClient = await connectToCluster(uri); 
+    const db = mongoClient.db('myData'); 
+    const dbCollection = db.collection('posts');
+    
+    //const result = {};
+    const sort = { dateCreated: -1 };
+    const result = await dbCollection.find().sort(sort).limit(7).toArray();
+    console.log(result);
+    return result;
+}
+
 //connectToCluster(uri);
 //createDocument('myCollection', { name : 'Joseph Campbell', email : 'joeDawg@gmail.com', password : 'ilovebigtitties'});
 //findDocument('users', 'name', 'Bill');
 //findDocument('users', '_id', '63bf5e8fc00d9648417f2bde');
+//findLatestSevenPosts() 
 
-module.exports = { connectToCluster, findDocument , createDocument }; 
+module.exports = { connectToCluster, findDocument , createDocument, findLatestSevenPosts }; 

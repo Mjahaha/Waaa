@@ -12,6 +12,7 @@ const initialisePassport = require('./passport-config.js');
 // * Forgot password 
 // * User details edit 
 // * Delete your account 
+// * Post count per user
 
 
 //Importing my middleware
@@ -21,6 +22,8 @@ const checkNotAuthenticated = require('./authenticationMiddleware.js').checkNotA
 //Mongo methods and functions
 const createDocument = require('../mongoCRUD.js').createDocument; 
 const findDocument = require('../mongoCRUD.js').findDocument; 
+const findLatestSevenPosts = require('../mongoCRUD.js').findLatestSevenPosts;
+
 
 async function createUser(data) {
     await createDocument('users', data);
@@ -51,23 +54,29 @@ usersRouter.use(passport.session());
 usersRouter.use(methodOverride('_method'));
 
 //index methods
-usersRouter.get('/', (req, res) => {
+usersRouter.get('/', async (req, res) => {
     let userId;
+    let user = {}; 
+
+    const feedResults = await findLatestSevenPosts();
+    let element = '';
+    feedResults.forEach( post => {
+        element += '<div class="post"><div class="post-text"><h4>Posted by @';
+        element += post.userName;
+        element += '</h4><p>';
+        element += post.postText;
+        element += '</p><p>Waaa 3.7   Care 2.1   Fix 9.8</p></div><div class="rate">Rate</div></div>';
+    });
+
     if (req.isAuthenticated()) {
         userId = req.session.passport.user;
     }
-    
-    async function getUserDetailsIfAuthenticated() {
-        let user = {}; 
-        if (userId) {
-            user = await findUserByKey('_id', userId);
-            res.render('index.ejs', { name: user.name });
-        } else {
-            res.render('index.ejs', { name: null });
-        }
-        
+    if (userId) {
+        user = await findUserByKey('_id', userId);
+        res.render('index.ejs', { name: user.name, element: element });
+    } else {
+        res.render('index.ejs', { name: null, element: element });
     }
-    getUserDetailsIfAuthenticated();
     
 }); 
 

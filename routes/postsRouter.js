@@ -26,7 +26,11 @@ async function createPost(data) {
 }
 
 async function findPostByKey(key, value) {
-    return await findDocument('post', key, value);
+    return await findDocument('posts', key, value);
+}
+
+async function findUserByKey(key, value) {
+    return await findDocument('users', key, value);
 }
 
 //createPost({ userId:'jibberish', postText: 'I am so angry about this issue. Why does it suck so much?', dateCreated: '2023-01-12T00:53:43.192Z' });
@@ -42,16 +46,18 @@ postsRouter.use(express.urlencoded( { extended : false } ));
 postsRouter.use(passport.initialize());
 postsRouter.use(passport.session());
 
-postsRouter.get('/post', checkAuthenticated, (req, res) => {
+postsRouter.get('/post', checkAuthenticated, async (req, res) => {
     res.render('post.ejs');
 }); 
 
-postsRouter.post('/post', checkAuthenticated, (req, res) => {
+postsRouter.post('/post', checkAuthenticated, async (req, res) => {
     const userId = req.session.passport.user;
     const currentDate = new Date;
+    const userDeets = await findUserByKey('_id', userId);
     const postObject = {
         postText: req.body.post,
         userId: userId,
+        userName: userDeets.name,
         dateCreated: currentDate
     };
     createPost(postObject); 
