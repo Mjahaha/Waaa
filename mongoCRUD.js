@@ -51,4 +51,4 @@ async function findDocument(collection, key, value) {
 //findDocument('users', 'name', 'Bill');
 //findDocument('users', '_id', '63bf5e8fc00d9648417f2bde');
 
-module.exports = { findDocument , createDocument }; 
+module.exports = { connectToCluster, findDocument , createDocument }; 
