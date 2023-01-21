@@ -61,7 +61,7 @@ postsRouter.post('/post', checkAuthenticated, async (req, res) => {
         dateCreated: currentDate
     };
     createPost(postObject); 
-    res.render('index.ejs', { name: null });
+    res.redirect('/');
 });
 
 module.exports = postsRouter;
