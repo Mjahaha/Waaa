@@ -53,32 +53,7 @@ usersRouter.use(passport.initialize());
 usersRouter.use(passport.session());
 usersRouter.use(methodOverride('_method'));
 
-//index methods
-usersRouter.get('/', async (req, res) => {
-    let userId;
-    let user = {}; 
 
-    const feedResults = await findLatestSevenPosts();
-    let element = '';
-    feedResults.forEach( post => {
-        element += '<div class="post"><div class="post-text"><h4>Posted by @';
-        element += post.userName;
-        element += '</h4><p>';
-        element += post.postText;
-        element += '</p><p>Waaa 3.7   Care 2.1   Fix 9.8</p></div><div class="rate">Rate</div></div>';
-    });
-
-    if (req.isAuthenticated()) {
-        userId = req.session.passport.user;
-    }
-    if (userId) {
-        user = await findUserByKey('_id', userId);
-        res.render('index.ejs', { name: user.name, element: element });
-    } else {
-        res.render('index.ejs', { name: null, element: element });
-    }
-    
-}); 
 
 //login rest methods 
 usersRouter.get('/login', checkNotAuthenticated, (req, res) => {
@@ -127,7 +102,7 @@ usersRouter.post('/register', checkNotAuthenticated, (req, res, next) => {
         console.log(err);
         res.redirect('/register');
     }
-});
+}); 
 
 //logout method 
 usersRouter.delete('/logout', (req, res) => {

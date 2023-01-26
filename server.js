@@ -17,9 +17,9 @@ app.use(express.urlencoded( { extended : false } ));
 const usersRouter = require('./routes/usersRouter.js');
 app.use('/', usersRouter);
 const postsRouter = require('./routes/postsRouter.js'); 
-
 app.use('/', postsRouter); 
-
+const loadRouter = require('./routes/loadRouter.js');
+app.use('/', loadRouter);
 
 app.listen(PORT, () => {
     console.log('The server for complaing your life away has begun..');
